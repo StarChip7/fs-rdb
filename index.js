@@ -17,6 +17,8 @@ const main = async () => {
     app.use(express.static('build'))
     app.use('/api/users', router)
     app.use('/api/login', loginRouter)
+    app.use('/api/readinglists', require('./controllers/readingList'))
+    app.use('/api/logout', require('./controllers/logout'))
     app.use('/api/blogs', blogsRouter)
     app.use('/api/authors', require('./controllers/authors'))
     app.use('', require('./controllers/testing'))

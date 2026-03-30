@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
         exclude: ['userId']
       }
     }
-})
+  })
   res.json(users)
 })
 
@@ -18,13 +18,33 @@ router.post('/', async (req, res, next) => {
   try {
     const user = await User.create(req.body)
     res.json(user)
-  } catch(error) {
+  } catch (error) {
     next(error)
   }
 })
 
 router.get('/:id', async (req, res) => {
-  const user = await User.findByPk(req.params.id)
+  const where = {}
+  if (req.query.read) {
+    where.read = req.query.read === 'true'
+  }
+  const user = await User.findByPk(req.params.id, {
+    include: [
+      {
+        model: Blog,
+        attributes: { exclude: ['userId'] },
+      },
+      {
+        model: Blog,
+        as: 'marked_blogs',
+        attributes: { exclude: ['userId'] },
+        through: {
+          where,
+        },
+      },
+    ],
+  })
+
   if (user) {
     res.json(user)
   } else {
