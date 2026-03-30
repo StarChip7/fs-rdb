@@ -1,8 +1,11 @@
 const { connectToDatabase } = require('./utils/db')
+const models = require('./models')
 const express = require('express')
 const app = express()
-const blogsRouter = require('./controllers/blogs')
+
 const { errorHandler } = require('./utils/middleware')
+
+const blogsRouter = require('./controllers/blogs')
 const router = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 
