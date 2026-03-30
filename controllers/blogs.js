@@ -56,7 +56,7 @@ blogsRouter.delete('/:id', tokenExtractor, blogFinder, async (req, res) => {
   res.status(204).end()
 })
 
-blogsRouter.put('/:id', tokenExtractor, blogFinder, async (req, res, next) => {
+blogsRouter.put('/:id', blogFinder, async (req, res, next) => {
   const blog = req.blog
   try {
     blog.likes = req.body.likes
