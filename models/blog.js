@@ -22,7 +22,7 @@ Blog.init({
 }, {
   sequelize,
   underscored: true,
-  modelName: 'Blog'
+  modelName: 'blog'
 })
 
 module.exports = Blog
