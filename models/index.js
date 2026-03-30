@@ -9,5 +9,5 @@ User.sync({ alter: true })
 Blog.sync({ alter: true })
 
 module.exports = {
-  Blog, User
+  User, Blog
 }
