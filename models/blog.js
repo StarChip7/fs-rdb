@@ -22,7 +22,6 @@ Blog.init({
 }, {
   sequelize,
   underscored: true,
-  timestamps: false,
   modelName: 'Blog'
 })
 
