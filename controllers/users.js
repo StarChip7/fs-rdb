@@ -32,10 +32,6 @@ router.get('/:id', async (req, res) => {
     include: [
       {
         model: Blog,
-        attributes: { exclude: ['userId'] },
-      },
-      {
-        model: Blog,
         as: 'marked_blogs',
         attributes: { exclude: ['userId'] },
         through: {
@@ -46,6 +42,8 @@ router.get('/:id', async (req, res) => {
   })
 
   if (user) {
+    user.dataValues.readings = user.dataValues.marked_blogs
+    delete user.dataValues.marked_blogs
     res.json(user)
   } else {
     res.status(404).end()

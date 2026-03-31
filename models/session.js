@@ -22,7 +22,6 @@ Session.init({
 }, {
     sequelize,
     underscored: true,
-    timestamps: false,
     modelName: 'session'
 })
 

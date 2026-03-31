@@ -1,33 +1,31 @@
 const express = require('express')
 const { ReadingList } = require('../models')
+const models = require('../models')
 const { tokenExtractor } = require('../utils/middleware')
 
 const readingListRouter = express.Router()
 
 readingListRouter.post('/', async (req, res) => {
   const { blogId, userId } = req.body
+  console.log('Received request to add to reading list:', { blogId, userId })
 
   if (!blogId || !userId) {
     return res.status(400).json({ error: 'Blog ID and User ID are required' })
-  }
-  if (typeof blogId !== 'number' || typeof userId !== 'number') {
+  }else if (typeof blogId !== 'number' || typeof userId !== 'number') {
     return res.status(400).json({ error: 'Blog ID and User ID must be numbers' })
-  }
-  //check if the blogId and userId exist in the database
-  if (!await ReadingList.sequelize.models.Blog.findByPk(blogId)) {
+  }else if (!await models.Blog.findByPk(blogId)) {
     return res.status(404).json({ error: 'Blog not found' })
-  }
-  if (!await ReadingList.sequelize.models.User.findByPk(userId)) {
+  }else if(!await models.User.findByPk(userId)) {
     return res.status(404).json({ error: 'User not found' })
   }
 
   try {
-    const existingEntry = await ReadingList.findOne({ where: { userId, blogId } })
+    const existingEntry = await ReadingList.findOne({ where: { user_id: userId, blog_id: blogId } })
     if (existingEntry) {
       return res.status(400).json({ error: 'Blog already in reading list' })
     }
 
-    const newEntry = await ReadingList.create({ userId, blogId })
+    const newEntry = await ReadingList.create({ user_id: userId, blog_id: blogId })
     res.status(201).json(newEntry)
   } catch (error) {
     console.error('Error adding to reading list:', error)
@@ -51,7 +49,7 @@ readingListRouter.put('/:id', tokenExtractor, async (req, res) => {
 
     // Check if the user is the owner of the reading list entry
     if (entry.userId !== req.user.id) {
-      return res.status(403).json({ error: 'Forbidden: You can only update your own reading list entries' })
+      return res.status(401).json({ error: 'Forbidden: You can only update your own reading list entries' })
     }
 
     entry.read = read
